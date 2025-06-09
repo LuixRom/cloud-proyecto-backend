@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: API Productos
+  version: 1.0.0
+
+paths:
+  /producto/listar:
+    post:
+      summary: Listar productos por tenant
+      tags: [Producto]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id]
+              properties:
+                tenant_id:
+                  type: string
+                limit:
+                  type: integer
+                start_key:
+                  type: object
+      responses:
+        '200':
+          description: Lista de productos
+
+  /producto/crear:
+    post:
+      summary: Crear producto
+      tags: [Producto]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id, producto_id, nombre]
+              properties:
+                tenant_id:
+                  type: string
+                producto_id:
+                  type: string
+                nombre:
+                  type: string
+                descripcion:
+                  type: string
+                precio:
+                  type: number
+      responses:
+        '200':
+          description: Producto creado
+
+  /producto/buscar:
+    post:
+      summary: Buscar producto por ID
+      tags: [Producto]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id, producto_id]
+              properties:
+                tenant_id:
+                  type: string
+                producto_id:
+                  type: string
+      responses:
+        '200':
+          description: Detalles del producto
+
+  /producto/modificar:
+    post:
+      summary: Modificar producto
+      tags: [Producto]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id, producto_id, producto_datos]
+              properties:
+                tenant_id:
+                  type: string
+                producto_id:
+                  type: string
+                producto_datos:
+                  type: object
+      responses:
+        '200':
+          description: Producto actualizado
+
+  /producto/eliminar:
+    post:
+      summary: Eliminar producto
+      tags: [Producto]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id, producto_id]
+              properties:
+                tenant_id:
+                  type: string
+                producto_id:
+                  type: string
+      responses:
+        '200':
+          description: Producto eliminado
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

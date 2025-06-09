@@ -1,0 +1,61 @@
+openapi: 3.0.0
+info:
+  title: API Compras
+  version: 1.0.0
+
+paths:
+  /compra/registrar:
+    post:
+      summary: Registrar una compra
+      tags: [Compra]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id, user_id, productos]
+              properties:
+                tenant_id:
+                  type: string
+                user_id:
+                  type: string
+                productos:
+                  type: array
+                  items:
+                    type: object
+                total:
+                  type: number
+      responses:
+        '201':
+          description: Compra registrada
+
+  /compra/listar:
+    post:
+      summary: Listar compras por usuario
+      tags: [Compra]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tenant_id, user_id]
+              properties:
+                tenant_id:
+                  type: string
+                user_id:
+                  type: string
+      responses:
+        '200':
+          description: Lista de compras
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
