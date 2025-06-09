@@ -103,3 +103,82 @@ functions:
           path: /compra/listar
           method: post
           cors: true
+
+  # === INDEXACIÓN POR STREAM ===
+  indexarProducto:
+    handler: IndexarProducto.lambda_handler
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - TablaProductos
+              - StreamArn
+          batchSize: 1
+          startingPosition: LATEST
+
+  indexarCompra:
+    handler: IndexarCompra.lambda_handler
+    events:
+      - stream:
+          type: dynamodb
+          arn:
+            Fn::GetAtt:
+              - TablaCompras
+              - StreamArn
+          batchSize: 1
+          startingPosition: LATEST
+
+resources:
+  Resources:
+    TablaUsuarios:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: t_usuarios
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+
+    TablaTokens:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: t_tokens_acceso
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: token
+            AttributeType: S
+        KeySchema:
+          - AttributeName: token
+            KeyType: HASH
+
+    TablaProductos:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: t_productos
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: producto_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: producto_id
+            KeyType: HASH
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
+
+    TablaCompras:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: t_compras
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: compra_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: compra_id
+            KeyType: HASH
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
